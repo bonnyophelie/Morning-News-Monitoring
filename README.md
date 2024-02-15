@@ -8,14 +8,11 @@
   	- [Alerting](#alerting)
   	- [Test Alerts](#test-alerts)
     - [Add additional Datasources](#add-additional-datasources)
-  - [Deploy Prometheus stack with Traefik](#deploy-prometheus-stack-with-traefik)
   - [Security Considerations](#security-considerations)
-  	- [Production Security](#production-security)
-  - [Troubleshooting](#troubleshooting)
   	- [Mac Users](#mac-users)
-  - [Interesting Projects that use this Repo](#interesting-projects-that-use-this-repo)
 
 # Installation & Configuration
+
 Clone the project locally.
 
 If you would like to change which targets should be monitored or make configuration changes edit the [/prometheus/prometheus.yml](prometheus/prometheus.yml) file. The targets section is where you define what should be monitored by Prometheus. The names defined in this file are actually sourced from the service name in the docker-compose file. If you wish to change names of the services you can add the "container_name" parameter in the `docker-compose.yml` file.
