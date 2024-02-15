@@ -1,7 +1,6 @@
 
 # Contents
 
-- Introduction
   - [Installation & Configuration](#installation--configuration)
     - [Add Datasources & Dashboards](#add-datasources-and-dashboards)
     - [Install Dashboards the Old Way](#install-dashboards-the-old-way)
