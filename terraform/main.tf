@@ -1,24 +1,15 @@
-terraform {
-  required_providers {
-    linode = {
-      source  = "linode/linode"
-      version = "2.5.2"
-    }
-  }
-}
-
-provider "linode" {
-  token = var.token
-}
-
 resource "linode_instance" "morning_monitoring" {
-  image           = "linode/debian12"
-  label           = "Monitoring"
-  group           = "Morning News"
-  region          = "fr-par"
-  type            = "g6-nanode-1"
-  root_pass       = var.root_pass
-  authorized_keys = [var.authorized_keys]
+  image           = var.linode_image
+  label           = var.linode_label
+  group           = var.linode_group
+  region          = var.linode_region
+  type            = var.linode_type
+  root_pass       = var.linode_root_pass
+  authorized_keys = [var.linode_authorized_keys]
+
+  tags = {
+    Name = var.linode_instance_name
+  }
 }
 
 locals {
@@ -34,5 +25,5 @@ resource "local_file" "file" {
 ${ip}
 %{endfor}
 EOT
-  filename = "host"
+  filename = "inventory"
 }
