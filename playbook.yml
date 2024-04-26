@@ -1,0 +1,19 @@
+- name: Installing Docker
+  hosts: all
+  become: true
+  role:
+    - ./roles/docker
+    
+
+# - name: Installing Nginx Reverse-Proxy
+#  hosts: all
+#  become: true
+#  role:
+    - ./roles/nginx
+
+
+#- name: Security rules
+#  hosts: all
+#  become: true
+#  role:
+#    - ./roles/security
