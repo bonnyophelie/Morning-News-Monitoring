@@ -1,0 +1,14 @@
+- name: Restart sshd
+  ansible.builtin.service:
+    name: ssh
+    state: restarted
+
+- name: Restart crowdsec
+  ansible.builtin.service:
+    name: crowdsec
+    state: restarted
+  
+- name: reload ufw
+  ansible.builtin.service:
+      name: ufw
+      state: reloaded

@@ -1,0 +1,69 @@
+- name: Configure sshd
+  ansible.builtin.lineinfile:
+    path: "/etc/ssh/sshd_config"
+    regex: "^(#)?{{ item.key }}"
+    line: "{{ item.key }} {{ item.value }}"
+    state: present
+  loop:
+    - { key: "PermitRootLogin", value: "no" }
+    - { key: "PasswordAuthentication", value: "no" }
+  notify:
+    - Restart sshd
+
+- name: Install UFW firewall
+  ansible.builtin.apt:
+    name: ufw
+    update_cache: true
+    state: latest
+
+- name: Deny everything and enable ufw
+  community.general.ufw:
+    state: enabled
+    policy: deny
+
+- name: Set logging
+  community.general.ufw:
+    logging: true
+
+- name: Allow OpenSSH
+  community.general.ufw:
+    rule: allow
+    name: OpenSSH
+
+- name: Allow all access to tcp ports
+  community.general.ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  with_items:
+    - 22
+    - 80
+    - 443
+    - 8081
+    - 3000
+    - 9090
+    - 9093
+    - 9100
+  notify: Reload ufw
+
+- name: Crowdsec Add GPG apt Key
+  ansible.builtin.apt_key:
+    url: https://packagecloud.io/crowdsec/crowdsec/gpgkey
+    state: present
+
+- name: Crowdsec Add Repository
+  ansible.builtin.apt_repository:
+    repo: "deb https://packagecloud.io/crowdsec/crowdsec/{{ ansible_distribution | lower }} {{ ansible_distribution_release | lower }} main"
+    state: present
+
+- name: Crowdsec Apt update and install Crowdsec
+  ansible.builtin.package:
+    update_cache: true
+    name: crowdsec
+    state: present
+
+- name: Crowdsec install bouncer
+  ansible.builtin.apt:
+    name: crowdsec-firewall-bouncer-iptables
+    state: latest
+  notify: Restart crowdsec
