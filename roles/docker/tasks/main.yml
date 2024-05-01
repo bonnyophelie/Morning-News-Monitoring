@@ -10,7 +10,8 @@
     - name: Add Docker's official GPG key
       block:
         - name: Update apt
-          import_role: update
+          ansible.builtin.import_role:
+            name: update
         - name: Install necessary packages
           become: true
           ansible.builtin.apt:
@@ -41,7 +42,8 @@
               "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
               sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
         - name: Update apt
-          import_role: update
+          ansible.builtin.import_role:
+            name: update
 
     - name: Install Docker packages
       become: true
@@ -70,18 +72,3 @@
     name: yourUser
     groups: docker
     append: true
-
-- name: Copy folder prometheus/node_exporter/grafana
-  become: true
-  ansible.builtin.copy:
-    src: /home/engineer/Bureau/Batch7/Projet/morningnews-projet/monitoring/prometheus
-    dest: /root
-
-- name: Tear down existing services
-  community.docker.docker_compose_v2:
-    project_src: /root/prometheus
-    state: absent
-
-- name: Create and start services
-  community.docker.docker_compose_v2:
-    project_src: /root/prometheus

@@ -1,19 +1,22 @@
 - name: Installing Docker
   hosts: all
   become: true
-  role:
-    - roles/docker
+  tasks:
+    - ansible.builtin.import_role:
+        name: roles/docker
     
 
 - name: Installing Nginx Reverse-Proxy
-hosts: all
-become: true
-role:
-    - roles/nginx
+  hosts: all
+  become: true
+  tasks:
+      - ansible.builtin.import_role:
+          name: roles/nginx
 
 
 - name: Security rules
   hosts: all
   become: true
-  role:
-    - roles/security
+  tasks:
+    - ansible.builtin.import_role:
+        name: roles/security
