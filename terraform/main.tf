@@ -6,10 +6,6 @@ resource "linode_instance" "morning_monitoring" {
   type            = var.linode_type
   root_pass       = var.linode_root_pass
   authorized_keys = [var.linode_authorized_keys]
-
-  tags = {
-    Name = var.linode_instance_name
-  }
 }
 
 locals {
