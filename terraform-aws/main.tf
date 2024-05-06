@@ -30,7 +30,7 @@ resource "aws_security_group" "monitoring_security_group" {
   vpc_id = data.aws_vpc.default.id
 
   ingress = [
-    for port in [22, 80, 443, 9100, 8081] : {
+    for port in [22, 80, 443, 9090, 9093, 9100, 8081] : {
       description      = "TLS from VPC"
       from_port        = port
       to_port          = port
