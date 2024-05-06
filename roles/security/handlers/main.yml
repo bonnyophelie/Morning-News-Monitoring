@@ -8,7 +8,7 @@
     name: crowdsec
     state: restarted
   
-- name: reload ufw
+- name: Reload ufw
   ansible.builtin.service:
       name: ufw
       state: reloaded
