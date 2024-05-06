@@ -37,3 +37,8 @@
   ansible.builtin.command: 'certbot -n --nginx -d monitoring.batch7.online'
   args:
     creates: '/etc/letsencrypt/live/monitoring.batch7.online'
+
+- name: Copy docker-compose file
+  ansible.builtin.copy:
+    src: templates/docker-compose.yml
+    dest: /home/admin
