@@ -1,5 +1,5 @@
 
-#resource "aws_key_pair" "frontend-key-deployer" {
+#resource "aws_key_pair" "monitoring-key-deployer" {
 #  key_name   = var.aws_key_name
 #  public_key = var.aws_public_key
 #}
@@ -9,8 +9,8 @@ data "aws_vpc" "default" {
 }
 
 
-# resource "aws_eip_association" "frontend_association_EIP" {
-#   instance_id   = aws_instance.frontend_instance.id
+# resource "aws_eip_association" "monitoring_association_EIP" {
+#   instance_id   = aws_instance.monitoring_instance.id
 #   allocation_id = var.aws_allocation_id
 # }
 
@@ -30,7 +30,7 @@ resource "aws_security_group" "monitoring_security_group" {
   vpc_id = data.aws_vpc.default.id
 
   ingress = [
-    for port in [22, 80, 443, 9090, 9093, 9100, 8081] : {
+    for port in [22, 80, 443, 8081, 9090, 9093, 9100] : {
       description      = "TLS from VPC"
       from_port        = port
       to_port          = port
@@ -65,5 +65,5 @@ resource "local_file" "file" {
 ${ip}
 %{endfor}
 EOT
-  filename = "inventory"
+  filename = "../inventory"
 }
