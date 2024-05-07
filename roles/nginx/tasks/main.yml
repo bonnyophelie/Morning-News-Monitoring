@@ -40,5 +40,5 @@
 
 - name: Copy docker-compose file
   ansible.builtin.copy:
-    src: templates/docker-compose.yml
+    src: ../../../prometheus
     dest: /home/admin

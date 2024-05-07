@@ -20,17 +20,3 @@
   tasks:
     - ansible.builtin.import_role:
         name: roles/security
-
-- name: Run using a project directory
-  hosts: all
-  gather_facts: false
-  tasks:
-    - name: Tear down existing services
-      community.docker.docker_compose:
-        project_src: /home/admin
-        state: absent
-
-    - name: Create and start services
-      community.docker.docker_compose:
-        project_src: /home/admin
-      register: output
