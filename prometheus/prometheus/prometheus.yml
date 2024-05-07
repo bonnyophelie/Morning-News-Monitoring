@@ -50,55 +50,22 @@ scrape_configs:
     scrape_interval: 15s
   
     static_configs:
-      - targets: ['172.232.55.246:9100']
+      - targets: ['localhost:9100']
 
-  - job_name: 'node-exporter frontend/preprod'
-
-    # Override the global default and scrape targets from this job every 5 seconds.
-    scrape_interval: 15s
-  
-    static_configs:
-      - targets: ['51.21.85.80:9100']
-  
-  - job_name: 'cadvisor frontend/preprod'
-
-    # Override the global default and scrape targets from this job every 5 seconds.
-    scrape_interval: 15s
-
-    static_configs:
-      - targets: ['51.21.85.80:8081']
-
-  - job_name: 'node-exporter frontend/prod'
+  - job_name: 'node-exporter frontend'
 
     # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 15s
   
     static_configs:
-      - targets: ['16.16.55.245:9100']
-
-  - job_name: 'cadvisor frontend/prod'
+      - targets: ['frontend.batch7.online:9100']
+  
+  - job_name: 'cadvisor frontend'
 
     # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 15s
 
     static_configs:
-      - targets: ['16.16.55.245:8081']
+      - targets: ['frontend.batch7.online:8081']
 
-  - job_name: "Project 0-mongo-metrics"
-    scrape_interval: 10s
-    metrics_path: /metrics
-    scheme : https
-    basic_auth:
-      username: prom_user_659fb006499b857ec8171b3a
-      password: admin
-    http_sd_configs:
-      - url: https://cloud.mongodb.com/prometheus/v1.0/groups/659fb006499b857ec8171b3a/discovery
-        refresh_interval: 60s
-        basic_auth:
-          username: prom_user_659fb006499b857ec8171b3a
-          password: admin
   
-  - job_name: "Mongodb-PreProd"
-    scrape_interval: 10s
-    static_configs:
-              - targets: ["172.232.38.65:9216"]
