@@ -38,7 +38,7 @@
   args:
     creates: '/etc/letsencrypt/live/monitoring.batch7.online'
 
-- name: Copy docker-compose file
+- name: Copy docker-compose folder
   ansible.builtin.copy:
     src: ../../../prometheus
     dest: /home/admin

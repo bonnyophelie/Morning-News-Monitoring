@@ -20,3 +20,18 @@
   tasks:
     - ansible.builtin.import_role:
         name: roles/security
+
+- name: Launch services
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Tear down existing services
+      community.docker.docker_compose_v2:
+        project_src: prometheus
+        state: absent
+
+    - name: Create and start services
+      community.docker.docker_compose_v2:
+        project_src: prometheus
+      register: output
