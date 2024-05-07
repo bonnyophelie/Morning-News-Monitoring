@@ -23,13 +23,8 @@
 
 - name: Copy the Nginx configuration file to the host
   template:
-    src: templates/nginx.conf.j2
-    dest: /etc/nginx/sites-available/default
-
-- name: Configure Nginx
-  template:
     src: templates/nginx.conf
-    dest: /etc/nginx/nginx.conf
+    dest: /etc/nginx/sites-available/default
   
 - name: Create link to the new config to enable it
   file:
