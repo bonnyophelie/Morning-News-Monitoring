@@ -21,7 +21,6 @@
     enabled: yes
 
 - name: Copy NGINX and Prometheus configurations
-  hosts: all
   become: yes
   vars_files:
     - ../vars/main.yml
