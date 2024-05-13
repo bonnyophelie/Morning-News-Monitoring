@@ -3,6 +3,12 @@
     name: nginx
     state: present
 
+- name: Ensure NGINX service is running
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+
 - name: Install Python3
   ansible.builtin.apt:
     name: python3
@@ -21,22 +27,27 @@
   args:
     creates: /etc/letsencrypt/.registered
 
-- name: Copy the Nginx configuration file to the host
-  template:
-    src: templates/nginx.conf.j2
-    dest: /etc/nginx/sites-available/default
-
-- name: Create link to the new config to enable it
-  file:
-    dest: /etc/nginx/sites-enabled/default
-    src: /etc/nginx/sites-available/default
-    state: link
-  notify: Restart the Nginx service
-
 - name: 'Get certificate'
-  ansible.builtin.command: 'certbot -n --nginx -d monitoring.batch7.online'
-  args:
-    creates: '/etc/letsencrypt/live/monitoring.batch7.online'
+  ansible.builtin.command: "openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/{{ item }}.key -out /etc/nginx/ssl/{{ item }}.crt"
+  with_items:
+      - grafana
+      - prometheus
+      - node-exporter
+      - alertmanager
+      - cadvisor
+
+- name: Configure NGINX for {{ item }}
+  template:
+      src: nginx_{{ item }}.conf.j2
+      dest: /etc/nginx/sites-available/{{ item }}
+  with_items:
+      - grafana
+      - prometheus
+      - node-exporter
+      - alertmanager
+      - cadvisor
+    notify: Reload NGINX
+
 
 - name: Copy docker-compose folder
   ansible.builtin.copy:
