@@ -1,0 +1,10 @@
+aws_access_key = # to define
+aws_secret_key = # to define
+aws_region = "eu-north-1"
+aws_key_name = "awx"
+aws_public_key = "~/.ssh/awx.pem"
+# aws_allocation_id = 
+aws_ami = "ami-0506d6d51f1916a96"
+aws_instance_type = "t3.micro"
+aws_monitoring_instance_name = "monitoring"
+aws_security_group_name = "monitoring"

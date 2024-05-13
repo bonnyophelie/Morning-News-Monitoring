@@ -40,8 +40,44 @@ server {
 
         server_name _;
 
-      location / {
+      location /grafana/ {
         proxy_pass http://monitoring.batch7.online:3000;
+
+        proxy_set_header        Host $host;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+      }
+
+      location /prometheus/ {
+        proxy_pass http://monitoring.batch7.online:9090;
+
+        proxy_set_header        Host $host;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+      }
+
+      location /nodeexporter/ {
+        proxy_pass http://monitoring.batch7.online:9100;
+
+        proxy_set_header        Host $host;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+      }
+
+      location /alertmanager/ {
+        proxy_pass http://monitoring.batch7.online:9093;
+
+        proxy_set_header        Host $host;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+      }
+
+      location /cadvisor/ {
+        proxy_pass http://monitoring.batch7.online:8081;
 
         proxy_set_header        Host $host;
         proxy_set_header        X-Real-IP $remote_addr;
@@ -87,3 +123,4 @@ server {
 #              try_files $uri $uri/ =404;
 #       }
 #
+

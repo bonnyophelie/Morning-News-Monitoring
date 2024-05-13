@@ -23,7 +23,7 @@
 
 - name: Copy the Nginx configuration file to the host
   template:
-    src: templates/nginx.conf
+    src: templates/nginx.conf.j2
     dest: /etc/nginx/sites-available/default
   
 - name: Create link to the new config to enable it
@@ -42,3 +42,6 @@
   ansible.builtin.copy:
     src: ../../../prometheus
     dest: /home/admin
+  register: container
+
+- name : 
