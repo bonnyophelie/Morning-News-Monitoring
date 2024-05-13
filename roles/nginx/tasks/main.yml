@@ -27,6 +27,11 @@
   args:
     creates: /etc/letsencrypt/.registered
 
+- name: 'Get certificate'
+  ansible.builtin.command: 'certbot -n --nginx -d monitoring.batch7.online'
+  args:
+    creates: '/etc/letsencrypt/live/monitoring.batch7.online'
+
 - name: Copy the Nginx configuration file to the host
   template:
     src: templates/nginx.conf.j2
@@ -38,9 +43,4 @@
     src: /etc/nginx/sites-available/default
     state: link
   notify: Restart the Nginx service
-
-- name: 'Get certificate'
-  ansible.builtin.command: 'certbot -n --nginx -d monitoring.batch7.online'
-  args:
-    creates: '/etc/letsencrypt/live/monitoring.batch7.online'
 
