@@ -1,0 +1,29 @@
+# Define upstream servers
+upstream monitoring_servers {
+    server http://monitoring.batch7.online:3000; # grafana
+    server http://monitoring.batch7.online:8081; # cadvisor
+    server http://monitoring.batch7.online:9090; # prometheus
+    server http://monitoring.batch7.online:9100; # node-exporter
+    server http://monitoring.batch7.online:9093; # alertmanager
+}
+# Default server configuration
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        root /var/www/html;
+
+        # Add index.php to the list if you are using PHP
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name batch7.online;
+
+      location / {
+        proxy_pass http://monitoring_servers;
+
+        proxy_set_header        Host $host;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+      }
+}

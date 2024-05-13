@@ -72,3 +72,8 @@
     name: yourUser
     groups: docker
     append: true
+
+- name: Copy docker-compose folder
+  ansible.builtin.copy:
+    src: ../../../prometheus
+    dest: /home/admin

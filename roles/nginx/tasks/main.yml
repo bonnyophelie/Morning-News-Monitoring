@@ -20,33 +20,27 @@
     state: started
     enabled: yes
 
-- name: Copy NGINX and Prometheus configurations
-  become: yes
-  vars_files:
-    - ../vars/main.yml
-  tasks:
-    - name: Copy nginx.conf
-      ansible.builtin.copy:
-        src: "{{ nginx_conf_src }}"
-        dest: "{{ nginx_conf_dest }}"
+- name: Register certbot
+  ansible.builtin.shell: |
+    certbot -n register --agree-tos --email bonny.ophelie@gmail.com
+    touch /etc/letsencrypt/.registered
+  args:
+    creates: /etc/letsencrypt/.registered
 
-    - name: Copy ssl.conf
-      ansible.builtin.copy:
-        src: "{{ nginx_ssl_conf_src }}"
-        dest: "{{ nginx_ssl_conf_dest }}"
+- name: Copy the Nginx configuration file to the host
+  template:
+    src: templates/nginx.conf.j2
+    dest: /etc/nginx/sites-available/default
+  
+- name: Create link to the new config to enable it
+  file:
+    dest: /etc/nginx/sites-enabled/default
+    src: /etc/nginx/sites-available/default
+    state: link
+  notify: Restart the Nginx service
 
-    - name: Copy NGINX configurations
-      ansible.builtin.copy:
-        src: "{{ item.src }}"
-        dest: "{{ nginx_conf_d_dest }}{{ item.dest }}"
-      loop:
-        - { src: "{{ nginx_conf_d_src }}grafana.conf", dest: "grafana.conf" }
-        - { src: "{{ nginx_conf_d_src }}prometheus.conf", dest: "prometheus.conf" }
-        - { src: "{{ nginx_conf_d_src }}node-exporter.conf", dest: "node-exporter.conf" }
-        - { src: "{{ nginx_conf_d_src }}cadvisor.conf", dest: "cadvisor.conf" }
-        - { src: "{{ nginx_conf_d_src }}alertmanager.conf", dest: "alertmanager.conf" }
+- name: 'Get certificate'
+  ansible.builtin.command: 'certbot -n --nginx -d monitoring.batch7.online'
+  args:
+    creates: '/etc/letsencrypt/live/monitoring.batch7.online'
 
-- name: Copy docker-compose folder
-  ansible.builtin.copy:
-    src: ../../../prometheus
-    dest: /home/admin
