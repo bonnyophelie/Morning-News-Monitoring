@@ -20,27 +20,39 @@
     state: started
     enabled: yes
 
-- name: Obtain SSL certificates using Certbot
-  ansible.builtin.command: "certbot certonly --nginx -d {{ item }}"
-  with_items:
-    - grafana.batch7.online
-    - prometheus.batch7.online
-    - node-exporter.batch7.online
-    - alertmanager.batch7.online
-    - cadvisor.batch7.online
+- name: Copy NGINX and Prometheus configurations
+  hosts: all
+  become: yes
 
-- name: Configure NGINX for {{ item }}
-  ansible.builtin.template:
-      src: nginx_{{ item }}.conf.j2
-      dest: /etc/nginx/sites-available/{{ item }}
-  with_items:
-      - grafana
-      - prometheus
-      - node-exporter
-      - alertmanager
-      - cadvisor
-    notify: Reload NGINX
+  vars:
+    nginx_conf_src: ../templates/nginx.conf
+    nginx_ssl_conf_src: ../templates/ssl.conf
+    nginx_conf_d_src: ../templates/conf.d/
+    nginx_conf_dest: /etc/nginx/nginx.conf
+    nginx_ssl_conf_dest: /etc/nginx/conf.d/ssl.conf
+    nginx_conf_d_dest: /etc/nginx/conf.d/
 
+  tasks:
+    - name: Copy nginx.conf
+      copy:
+        src: "{{ nginx_conf_src }}"
+        dest: "{{ nginx_conf_dest }}"
+
+    - name: Copy ssl.conf
+      copy:
+        src: "{{ nginx_ssl_conf_src }}"
+        dest: "{{ nginx_ssl_conf_dest }}"
+
+    - name: Copy NGINX configurations
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ nginx_conf_d_dest }}{{ item.dest }}"
+      loop:
+        - { src: "{{ nginx_conf_d_src }}grafana.conf", dest: "grafana.conf" }
+        - { src: "{{ nginx_conf_d_src }}prometheus.conf", dest: "prometheus.conf" }
+        - { src: "{{ nginx_conf_d_src }}node-exporter.conf", dest: "node-exporter.conf" }
+        - { src: "{{ nginx_conf_d_src }}cadvisor.conf", dest: "cadvisor.conf" }
+        - { src: "{{ nginx_conf_d_src }}alertmanager.conf", dest: "alertmanager.conf" }
 
 - name: Copy docker-compose folder
   ansible.builtin.copy:
