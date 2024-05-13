@@ -1,9 +1,9 @@
 server {
     listen 443 ssl;
-    server_name monitoring.batch7.online;
+    server_name node-exporter.batch7.online;
 
-    ssl_certificate /etc/nginx/ssl/node-exporter.crt;
-    ssl_certificate_key /etc/nginx/ssl/node-exporter.key;
+    ssl_certificate {{ ssl_cert_path }};
+    ssl_certificate_key {{ ssl_key_path }};
 
     location /node-exporter/ {
         proxy_pass http://localhost:9100;

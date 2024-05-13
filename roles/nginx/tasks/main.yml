@@ -3,12 +3,6 @@
     name: nginx
     state: present
 
-- name: Ensure NGINX service is running
-  ansible.builtin.service:
-    name: nginx
-    state: started
-    enabled: yes
-
 - name: Install Python3
   ansible.builtin.apt:
     name: python3
@@ -20,24 +14,23 @@
       - certbot
       - python3-certbot-nginx
 
-- name: Register certbot
-  ansible.builtin.shell: |
-    certbot -n register --agree-tos --email bonny.ophelie@gmail.com
-    touch /etc/letsencrypt/.registered
-  args:
-    creates: /etc/letsencrypt/.registered
+- name: Ensure NGINX service is running
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
 
-- name: 'Get certificate'
-  ansible.builtin.command: "openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/{{ item }}.key -out /etc/nginx/ssl/{{ item }}.crt"
+- name: Obtain SSL certificates using Certbot
+  ansible.builtin.command: "certbot certonly --nginx -d {{ item }}"
   with_items:
-      - grafana
-      - prometheus
-      - node-exporter
-      - alertmanager
-      - cadvisor
+    - grafana.batch7.online
+    - prometheus.batch7.online
+    - node-exporter.batch7.online
+    - alertmanager.batch7.online
+    - cadvisor.batch7.online
 
 - name: Configure NGINX for {{ item }}
-  template:
+  ansible.builtin.template:
       src: nginx_{{ item }}.conf.j2
       dest: /etc/nginx/sites-available/{{ item }}
   with_items:

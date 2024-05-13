@@ -1,9 +1,9 @@
 server {
     listen 443 ssl;
-    server_name monitoring.batch7.online;
+    server_name cadvisor.batch7.online;
 
-    ssl_certificate /etc/nginx/ssl/cadvisor.crt;
-    ssl_certificate_key /etc/nginx/ssl/cadvisor.key;
+    ssl_certificate {{ ssl_cert_path }};
+    ssl_certificate_key {{ ssl_key_path }};
 
     location /cadvisor/ {
         proxy_pass http://localhost:8081;
