@@ -14,12 +14,12 @@ services:
     - "./certs:/etc/nginx/certs"
 
   letsencrypt-nginx-proxy-companion:
-   image: jrcs/letsencrypt-nginx-proxy-companion
-   container_name: letsencrypt
-   volumes:
-    - "/var/run/docker.sock:/var/run/docker.sock:ro"
-   volumes_from:
-    - "nginx-proxy"
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: letsencrypt
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    volumes_from:
+      - "nginx-proxy"
 
   grafana:
     image: grafana/grafana
@@ -115,12 +115,11 @@ services:
       - ALERTM_LETSENCRYPT_HOST=${ALERTM_LETSENCRYPT_HOST}
       - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
 
-
 volumes:
   prometheus_data: {}
   grafana_data: {}
 
 networks:
- default:
-  external:
+  default:
+    external: true
     name: letsencrypt
