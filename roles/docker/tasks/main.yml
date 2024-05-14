@@ -75,5 +75,5 @@
 
 - name: Copy docker-compose folder
   ansible.builtin.copy:
-    src: ../../../prometheus
+    src: ./monitoring
     dest: /home/admin

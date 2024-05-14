@@ -4,13 +4,6 @@
   tasks:
     - ansible.builtin.import_role:
         name: roles/docker
-    
-- name: Installing Nginx Reverse-Proxy
-  hosts: all
-  become: true
-  tasks:
-      - ansible.builtin.import_role:
-          name: roles/nginx
 
 - name: Security rules
   hosts: all

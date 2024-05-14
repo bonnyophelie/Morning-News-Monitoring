@@ -1,6 +1,0 @@
-nginx_conf_src: ../templates/nginx.conf
-nginx_ssl_conf_src: ../templates/ssl.conf
-nginx_conf_d_src: ../templates/conf.d/
-nginx_conf_dest: /etc/nginx/nginx.conf
-nginx_ssl_conf_dest: /etc/nginx/conf.d/ssl.conf
-nginx_conf_d_dest: /etc/nginx/conf.d/
