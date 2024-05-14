@@ -1,3 +1,22 @@
-[Monitoring]
-localhost
+[Grafana]
+16.171.12.112
+
+[Prometheus]
+16.171.12.112
+
+[Cadvisor]
+16.171.12.112
+
+[Node-exporter]
+16.171.12.112
+
+[Alertmanager]
+16.171.12.112
+
+
+
+
+
+
+
 
