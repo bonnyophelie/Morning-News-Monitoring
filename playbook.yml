@@ -18,15 +18,14 @@
   gather_facts: false
   tasks:
     - name: Create network letsencrypt
-      docker_network:
+      community.docker.docker_network:
         name: letsencrypt
 
     - name: Tear down existing services
       community.docker.docker_compose_v2:
-        project_src: prometheus
+        project_src: monitoring
         state: absent
 
     - name: Create and start services
       community.docker.docker_compose_v2:
-        project_src: prometheus
-      register: output
+        project_src: monitoring
