@@ -1,16 +1,16 @@
-[Grafana]
+[grafana]
 16.171.12.112
 
-[Prometheus]
+[prometheus]
 16.171.12.112
 
-[Cadvisor]
+[cadvisor]
 16.171.12.112
 
-[Node-exporter]
+[nodeexporter]
 16.171.12.112
 
-[Alertmanager]
+[alertmanager]
 16.171.12.112
 
 
