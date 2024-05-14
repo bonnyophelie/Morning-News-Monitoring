@@ -53,7 +53,7 @@ services:
     links:
       - cadvisor:cadvisor
       - alertmanager:alertmanager
-    env_file: 
+    env_file:
       - .env
     environment:
       - PROMETHEUS_VIRTUAL_PORT=${PROMETHEUS_VIRTUAL_PORT}
@@ -69,20 +69,20 @@ services:
       - /sys:/host/sys:ro
       - /:/rootfs:ro
       - /:/host:ro,rslave
-    command: 
+    command:
       - '--path.rootfs=/host'
-      - '--path.procfs=/host/proc' 
+      - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
       - --collector.filesystem.ignored-mount-points
       - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
-    env_file: 
+    env_file:
       - .env
     environment:
       - NODEEXP_VIRTUAL_PORT=${NODEEXP_VIRTUAL_PORT}
       - NODEEXP_VIRTUAL_HOST=${NODEEXP_VIRTUAL_HOST}
       - NODEEXP_LETSENCRYPT_HOST=${NODEEXP_LETSENCRYPT_HOST}
       - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
-    
+
   cadvisor:
     image: gcr.io/cadvisor/cadvisor
     container_name: cadvisor
@@ -91,7 +91,7 @@ services:
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
-    env_file: 
+    env_file:
       - .env
     environment:
       - CADVISOR_VIRTUAL_PORT=${CADVISOR_VIRTUAL_PORT}
@@ -107,7 +107,7 @@ services:
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
-    env_file: 
+    env_file:
       - .env
     environment:
       - ALERTM_VIRTUAL_PORT=${ALERTM_VIRTUAL_PORT}
@@ -121,4 +121,6 @@ volumes:
   grafana_data: {}
 
 networks:
-  letsencrypt:
+ default:
+  external:
+    name: letsencrypt

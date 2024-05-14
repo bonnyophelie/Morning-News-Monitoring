@@ -17,6 +17,10 @@
   become: true
   gather_facts: false
   tasks:
+    - name: Create network letsencrypt
+      docker_network:
+        name: letsencrypt
+
     - name: Tear down existing services
       community.docker.docker_compose_v2:
         project_src: prometheus
