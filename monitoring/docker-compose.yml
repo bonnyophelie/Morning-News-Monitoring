@@ -2,24 +2,28 @@ version: '3.7'
 
 services:
   nginx-proxy:
-   container_name: nginx
-   image: jwilder/nginx-proxy
-   ports:
-    - "80:80"
-    - "443:443"
-   volumes:
-    - "/etc/nginx/vhost.d"
-    - "/usr/share/nginx/html"
-    - "/var/run/docker.sock:/tmp/docker.sock:ro"
-    - "./certs:/etc/nginx/certs"
-
-  letsencrypt-nginx-proxy-companion:
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: letsencrypt
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    volumes_from:
-      - "nginx-proxy"
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - letsencrypt-certs:/etc/nginx/certs
+      - letsencrypt-vhost-d:/etc/nginx/vhost.d
+      - letsencrypt-html:/usr/share/nginx/html
+
+  letsencrypt-proxy:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: letsencrypt-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt-certs:/etc/nginx/certs
+      - letsencrypt-vhost-d:/etc/nginx/vhost.d
+      - letsencrypt-html:/usr/share/nginx/html
+    environment:
+      - DEFAULT_EMAIL=bonny.ophelie@gmail.com
+      - NGINX_PROXY_CONTAINER=nginx-proxy
 
   grafana:
     image: grafana/grafana
@@ -36,7 +40,6 @@ services:
       - VIRTUAL_PORT=3000
       - VIRTUAL_HOST=grafana.batch7.online
       - LETSENCRYPT_HOST=grafana.batch7.online
-      - LETSENCRYPT_EMAIL=bonny.ophelie@gmail.com
 
   prometheus:
     image: prom/prometheus:v2.36.2
@@ -54,9 +57,8 @@ services:
       - alertmanager:alertmanager
     environment:
       - VIRTUAL_PORT=9090
-      - PROMETHEUS_VIRTUAL_HOST=prometheus.batch7.online
-      - PROMETHEUS_LETSENCRYPT_HOST=prometheus.batch7.online
-      - LETSENCRYPT_EMAIL=bonny.ophelie@gmail.com
+      - VIRTUAL_HOST=prometheus.batch7.online
+      - LETSENCRYPT_HOST=prometheus.batch7.online
 
   node-exporter:
     image: quay.io/prometheus/node-exporter:latest
@@ -90,7 +92,6 @@ services:
       - VIRTUAL_PORT=8081
       - VIRTUAL_HOST=cadvisor.batch7.online
       - LETSENCRYPT_HOST=cadvisor.batch7.online
-      - LETSENCRYPT_EMAIL=bonny.ophelie@gmail.com
 
   alertmanager:
     image: prom/alertmanager
@@ -104,13 +105,15 @@ services:
       - VIRTUAL_PORT=9093
       - VIRTUAL_HOST=alertmanager.batch7.online
       - LETSENCRYPT_HOST=alertmanager.batch7.online
-      - LETSENCRYPT_EMAIL=bonny.ophelie@gmail.com
-
-volumes:
-  prometheus_data: {}
-  grafana_data: {}
 
 networks:
   default:
+    name: nginx-proxy
     external: true
-    name: letsencrypt
+    
+volumes:
+  letsencrypt-certs:
+  letsencrypt-vhost-d:
+  letsencrypt-html:
+  prometheus_data: {}
+  grafana_data: {}
