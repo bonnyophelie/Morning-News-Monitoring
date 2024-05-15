@@ -12,6 +12,14 @@
     - ansible.builtin.import_role:
         name: roles/security
 
+- name: OVH DNS
+  hosts: all
+  environment:
+    OVH_ENDPOINT: "ovh-eu"
+    OVH_APPLICATION_KEY: "$OVH_APPLICATION_KEY"
+    OVH_APPLICATION_SECRET: "$OVH_APPLICATION_SECRET"
+    OVH_CONSUMER_KEY: "$OVH_CONSUMER_KEY"
+
 - name: Launch services
   hosts: all
   become: true
