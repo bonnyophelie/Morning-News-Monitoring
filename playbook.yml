@@ -25,9 +25,9 @@
   become: true
   gather_facts: false
   tasks:
-    - name: Create network letsencrypt
-      community.docker.docker_network:
-        name: letsencrypt
+    #- name: Create network letsencrypt
+    #  community.docker.docker_network:
+    #    name: letsencrypt
 
     - name: Tear down existing services
       community.docker.docker_compose_v2:

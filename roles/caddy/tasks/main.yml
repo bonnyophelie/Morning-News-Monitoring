@@ -1,9 +1,4 @@
----
-- name: Install and configure Caddy
-  hosts: all
-  become: yes
 
-  tasks:
     - name: Ensure the APT cache is up to date
       ansible.builtin.apt:
         update_cache: yes
