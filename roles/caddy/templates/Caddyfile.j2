@@ -1,0 +1,19 @@
+grafana.batch7.online {
+    reverse_proxy 127.0.0.1:3000
+}
+
+prometheus.batch7.online {
+    reverse_proxy 127.0.0.1:9090
+}
+
+node-exporter.batch7.online {
+    reverse_proxy 127.0.0.1:9100
+}
+
+cadvisor.batch7.online {
+    reverse_proxy 127.0.0.1:8081
+}
+
+alertmanager.batch7.online {
+    reverse_proxy 127.0.0.1:9093
+}
