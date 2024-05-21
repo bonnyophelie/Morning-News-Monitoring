@@ -88,6 +88,8 @@ services:
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
+    command:
+      - '-port=8081'
     environment:
       - VIRTUAL_PORT=8081
       - VIRTUAL_HOST=cadvisor.batch7.online
