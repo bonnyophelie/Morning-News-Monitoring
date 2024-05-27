@@ -16,5 +16,6 @@ sync-with-github:
         exit 0
       else
         echo "Changes detected, pushing to GitLab"
-        git push https://root:$ACCESS_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git HEAD:main
+        git remote set-url origin https://root:${ACCESS_TOKEN}@$CI_SERVER_HOST/$CI_PROJECT_PATH.git
+        git push origin HEAD:main
       fi
