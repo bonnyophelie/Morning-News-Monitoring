@@ -1,41 +1,46 @@
+- name: Ensure the APT cache is up to date
+  ansible.builtin.apt:
+   update_cache: yes
 
-    - name: Ensure the APT cache is up to date
-      ansible.builtin.apt:
-        update_cache: yes
+- name: Install dependencies
+  ansible.builtin.apt:
+   name:
+    - debian-keyring
+    - debian-archive-keyring
+    - apt-transport-https
+   state: present
 
-    - name: Install dependencies
-      ansible.builtin.apt:
-        name: 
-          - debian-keyring
-          - debian-archive-keyring
-          - apt-transport-https
-        state: present
+- name: Add the Caddy APT repository
+  ansible.builtin.apt_repository:
+   repo: "deb [trusted=yes] https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main"
+   state: present
 
-    - name: Add the Caddy APT repository
-      ansible.builtin.apt_repository:
-        repo: "deb [trusted=yes] https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main"
-        state: present
+- name: Install Caddy
+  ansible.builtin.apt:
+   name: caddy
+   state: present
 
-    - name: Install Caddy
-      ansible.builtin.apt:
-        name: caddy
-        state: present
+- name: Create Caddyfile configuration directory
+  ansible.builtin.file:
+   path: /etc/caddy
+   state: directory
+   owner: root
+   group: root
+   mode: '0755'
 
-    - name: Create Caddyfile configuration directory
-      ansible.builtin.file:
-        path: /etc/caddy
-        state: directory
-        owner: root
-        group: root
-        mode: '0755'
+- name: Upload the Caddyfile
+  ansible.builtin.copy:
+   template:
+   src: templates/Caddyfile.j2
+   dest: /etc/caddy/Caddyfile
+   owner: root
+   group: root
+   mode: '0644'
+  notify:
+   - Reload Caddy
 
-    - name: Upload the Caddyfile
-      ansible.builtin.copy:
-       template:
-        src: templates/Caddyfile.j2
-        dest: /etc/caddy/Caddyfile
-        owner: root
-        group: root
-        mode: '0644'
-      notify:
-        - Reload Caddy
+- name: Copy docker-compose file
+  ansible.builtin.copy:
+   src: templates/docker-compose.yml
+   dest: /home/admin/monitoring
+

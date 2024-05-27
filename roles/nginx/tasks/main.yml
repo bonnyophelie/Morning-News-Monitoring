@@ -1,0 +1,57 @@
+- name: Install Nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+
+- name: Install Python3
+  ansible.builtin.apt:
+    name: python3
+    state: present
+
+- name: Install certbot
+  ansible.builtin.apt:
+    name:
+      - certbot
+      - python3-certbot-nginx
+    state: present
+
+- name: Register certbot
+  ansible.builtin.shell: |
+    certbot -n register --agree-tos --email bonny.ophelie@gmail.com
+    touch /etc/letsencrypt/.registered
+  args:
+    creates: /etc/letsencrypt/.registered
+  register: register_certbot
+  changed_when: register_certbot.rc == 0
+
+- name: Copy the Nginx configuration file to the host
+  ansible.builtin.template:
+    src: templates/nginx.conf.j2
+    dest: /etc/nginx/sites-available/default
+  notify: Restart the Nginx service
+
+- name: Create link to the new config to enable it
+  file:
+    dest: /etc/nginx/sites-enabled/default
+    src: /etc/nginx/sites-available/default
+    state: link
+
+- name: Get certificates for all domains
+  ansible.builtin.command: 'certbot -n --nginx -d {{ item }}'
+  args:
+   creates: '/etc/letsencrypt/live/{{ item }}'
+  with_items:
+   - "grafana.batch7.online"
+   - "prometheus.batch7.online"
+   - "node-exporter.batch7.online"
+   - "cadvisor.batch7.online"
+   - "alertmanager.batch7.online"
+
+- name: Copy docker-compose file
+  ansible.builtin.copy:
+   src: templates/docker-compose.yml
+   dest: /home/admin/monitoring
+
+- name: Create network nginx-proxy
+  community.docker.docker_network:
+   name: nginx-proxy

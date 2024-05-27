@@ -12,13 +12,27 @@
     - ansible.builtin.import_role:
         name: roles/security
 
-- name: OVH DNS
+- name: Installing Nginx Reverse-Proxy
   hosts: all
-  environment:
-    OVH_ENDPOINT: "ovh-eu"
-    OVH_APPLICATION_KEY: "$OVH_APPLICATION_KEY"
-    OVH_APPLICATION_SECRET: "$OVH_APPLICATION_SECRET"
-    OVH_CONSUMER_KEY: "$OVH_CONSUMER_KEY"
+  become: true
+  tasks:
+    - ansible.builtin.import_role:
+        name: roles/nginx
+
+#- name: Installing Caddy
+#  hosts: all
+#  become: true
+#  tasks:
+#    - ansible.builtin.import_role:
+#        name: roles/caddy
+
+#- name: OVH DNS
+#  hosts: all
+#  environment:
+#    OVH_ENDPOINT: "ovh-eu"
+#    OVH_APPLICATION_KEY: "$OVH_APPLICATION_KEY"
+#    OVH_APPLICATION_SECRET: "$OVH_APPLICATION_SECRET"
+#    OVH_CONSUMER_KEY: "$OVH_CONSUMER_KEY"
 
 - name: Launch services
   hosts: all
