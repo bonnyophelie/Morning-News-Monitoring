@@ -1,8 +1,8 @@
-aws_access_key = "AKIAYS2NQWLQ7QOU3TUT"
-aws_secret_key = "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"
-aws_region     = "eu-north-1"
-aws_key_name   = "awx"
-aws_public_key = "~/.ssh/https.pem"
+aws_access_key = "to_define"
+aws_secret_key = "to_define"
+aws_region     = "to_define"
+aws_key_name   = "to_define"
+aws_public_key = "~/.ssh/to_define.pem"
 # aws_allocation_id = 
 aws_ami                      = "ami-0506d6d51f1916a96"
 aws_instance_type            = "t3.micro"
